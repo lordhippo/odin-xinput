@@ -198,7 +198,7 @@ XINPUT_KEYSTROKE :: struct {
 }
 
 // XInput APIs
-@(default_calling_convention = "std")
+@(default_calling_convention = "system")
 foreign xinput {
 
 	@(link_name = "XInputGetState")
