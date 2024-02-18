@@ -4,11 +4,12 @@ import "../../xinput"
 
 import "core:fmt"
 import "core:time"
+import "core:sys/windows"
 
 main :: proc() {
-	user :: xinput.User.One
+	user :: xinput.XUSER.One
 
-	packet_number: u32
+	packet_number: windows.DWORD
 	for {
 		state: xinput.XINPUT_STATE
 		if result := xinput.XInputGetState(user, &state); result == .SUCCESS {

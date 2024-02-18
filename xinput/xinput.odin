@@ -6,13 +6,13 @@ import "core:sys/windows"
 
 // Device types available in XINPUT_CAPABILITIES
 // Correspond to XINPUT_DEVTYPE_...
-Dev_Type :: enum windows.BYTE {
+XINPUT_DEVTYPE :: enum windows.BYTE {
 	GAMEPAD = 0x01,
 }
 
 // Device subtypes available in XINPUT_CAPABILITIES
 // Correspond to XINPUT_DEVSUBTYPE_...
-Dev_Subtype :: enum windows.BYTE {
+XINPUT_DEVSUBTYPE :: enum windows.BYTE {
 	UNKNOWN          = 0x00,
 	GAMEPAD          = 0x01,
 	WHEEL            = 0x02,
@@ -28,18 +28,18 @@ Dev_Subtype :: enum windows.BYTE {
 
 // Flags for XINPUT_CAPABILITIES
 // Correspond to log2(XINPUT_CAPS_...)
-Cap :: enum {
+XINPUT_CAP :: enum {
 	FFB_SUPPORTED   = 0,
 	WIRELESS        = 1,
 	VOICE_SUPPORTED = 2,
 	PMD_SUPPORTED   = 3,
 	NO_NAVIGATION   = 4,
 }
-Caps :: bit_set[Cap;windows.WORD]
+XINPUT_CAPS :: bit_set[XINPUT_CAP;windows.WORD]
 
 // Constants for gamepad buttons
 // Correspond to log2(XINPUT_GAMEPAD_...)
-Gamepad_Button :: enum {
+XINPUT_GAMEPAD_BUTTON_BIT :: enum {
 	DPAD_UP        = 0,
 	DPAD_DOWN      = 1,
 	DPAD_LEFT      = 2,
@@ -55,7 +55,7 @@ Gamepad_Button :: enum {
 	X              = 14,
 	Y              = 15,
 }
-Gamepad_Buttons :: bit_set[Gamepad_Button;windows.WORD]
+XINPUT_GAMEPAD_BUTTON :: bit_set[XINPUT_GAMEPAD_BUTTON_BIT;windows.WORD]
 
 // Gamepad thresholds
 XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE: windows.SHORT : 7849
@@ -64,21 +64,21 @@ XINPUT_GAMEPAD_TRIGGER_THRESHOLD: windows.SHORT : 30
 
 // Flags to pass to XInputGetCapabilities
 // Corresponds to log2(XINPUT_FLAG_...)
-Flag :: enum {
+XINPUT_FLAG_BIT :: enum {
 	GAMEPAD = 0,
 }
-Flags :: bit_set[Flag;windows.DWORD]
+XINPUT_FLAG :: bit_set[XINPUT_FLAG_BIT;windows.DWORD]
 
 // Devices that support batteries
 // Corresponds to BATTERY_DEVTYPE_...
-Battery_Dev_Type :: enum windows.BYTE {
+BATTERY_DEVTYPE :: enum windows.BYTE {
 	GAMEPAD = 0x00,
 	HEADSET = 0x01,
 }
 
 // Flags for battery status level
 // Correspond to BATTERY_TYPE_...
-Battery_Type :: enum windows.BYTE {
+BATTERY_TYPE :: enum windows.BYTE {
 	DISCONNECTED = 0x00, // This device is not connected
 	WIRED        = 0x01, // Wired device, no battery
 	ALKALINE     = 0x02, // Alkaline battery source
@@ -89,7 +89,7 @@ Battery_Type :: enum windows.BYTE {
 // These are only valid for wireless, connected devices, with known battery types
 // The amount of use time remaining depends on the type of device.
 // Correspond to BATTERY_LEVEL_...
-Battery_Level :: enum windows.BYTE {
+BATTERY_LEVEL :: enum windows.BYTE {
 	EMPTY  = 0x00,
 	LOW    = 0x01,
 	MEDIUM = 0x02,
@@ -99,7 +99,7 @@ Battery_Level :: enum windows.BYTE {
 // User index definitions
 
 // Index of the gamer associated with the device
-User :: enum windows.DWORD {
+XUSER :: enum windows.DWORD {
 	One   = 0,
 	Two   = 1,
 	Three = 2,
@@ -111,7 +111,7 @@ XUSER_MAX_COUNT :: 4
 
 // Codes returned for the gamepad keystroke
 // Corresponds to VK_PAD_...
-Virtual_Key :: enum windows.WORD {
+VK_PAD :: enum windows.WORD {
 	A                = 0x5800,
 	B                = 0x5801,
 	X                = 0x5802,
@@ -148,16 +148,16 @@ Virtual_Key :: enum windows.WORD {
 
 // Flags used in XINPUT_KEYSTROKE
 // Correspond to log2(XINPUT_KEYSTROKE_...)
-Keystroke :: enum {
+XINPUT_KEYSTROKE_BIT :: enum {
 	KEYDOWN = 0,
 	KEYUP   = 1,
 	REPEAT  = 2,
 }
-Keystrokes :: bit_set[Keystroke;windows.WORD]
+XINPUT_KEYSTROKES :: bit_set[XINPUT_KEYSTROKE_BIT;windows.WORD]
 
 // Structures used by XInput APIs
 XINPUT_GAMEPAD :: struct {
-	wButtons:      Gamepad_Buttons,
+	wButtons:      XINPUT_GAMEPAD_BUTTON,
 	bLeftTrigger:  windows.BYTE,
 	bRightTrigger: windows.BYTE,
 	sThumbLX:      windows.SHORT,
@@ -177,23 +177,23 @@ XINPUT_VIBRATION :: struct {
 }
 
 XINPUT_CAPABILITIES :: struct {
-	Type:      Dev_Type,
-	SubType:   Dev_Subtype,
-	Flags:     Caps,
+	Type:      XINPUT_DEVTYPE,
+	SubType:   XINPUT_DEVSUBTYPE,
+	Flags:     XINPUT_CAPS,
 	Gamepad:   XINPUT_GAMEPAD,
 	Vibration: XINPUT_VIBRATION,
 }
 
 XINPUT_BATTERY_INFORMATION :: struct {
-	BatteryType:  Battery_Type,
-	BatteryLevel: Battery_Level,
+	BatteryType:  BATTERY_TYPE,
+	BatteryLevel: BATTERY_LEVEL,
 }
 
 XINPUT_KEYSTROKE :: struct {
-	VirtualKey: Virtual_Key,
+	VirtualKey: VK_PAD,
 	Unicode:    windows.WCHAR,
-	Flags:      Keystrokes,
-	UserIndex:  User,
+	Flags:      XINPUT_KEYSTROKES,
+	UserIndex:  XUSER,
 	HidCode:    windows.BYTE,
 }
 
@@ -202,27 +202,27 @@ XINPUT_KEYSTROKE :: struct {
 foreign xinput {
 
 	@(link_name = "XInputGetState")
-	XInputGetState :: proc(user: User, pState: ^XINPUT_STATE) -> windows.System_Error ---
+	XInputGetState :: proc(user: XUSER, pState: ^XINPUT_STATE) -> windows.System_Error ---
 
 	@(link_name = "XInputSetState")
-	XInputSetState :: proc(user: User, pVibration: ^XINPUT_VIBRATION) -> windows.System_Error ---
+	XInputSetState :: proc(user: XUSER, pVibration: ^XINPUT_VIBRATION) -> windows.System_Error ---
 
 	@(link_name = "XInputGetCapabilities")
-	XInputGetCapabilities :: proc(user: User, dwFlags: Flags, pCapabilities: ^XINPUT_CAPABILITIES) -> windows.System_Error ---
+	XInputGetCapabilities :: proc(user: XUSER, dwFlags: XINPUT_FLAG, pCapabilities: ^XINPUT_CAPABILITIES) -> windows.System_Error ---
 
 	@(link_name = "XInputEnable")
 	XInputEnable :: proc(enable: windows.BOOL) ---
 
 	@(link_name = "XInputGetAudioDeviceIds")
-	XInputGetAudioDeviceIds :: proc(user: User, pRenderDeviceId: windows.LPWSTR, pRenderCount: ^windows.UINT, pCaptureDeviceId: windows.LPWSTR, pCaptureCount: ^windows.UINT) -> windows.System_Error ---
+	XInputGetAudioDeviceIds :: proc(user: XUSER, pRenderDeviceId: windows.LPWSTR, pRenderCount: ^windows.UINT, pCaptureDeviceId: windows.LPWSTR, pCaptureCount: ^windows.UINT) -> windows.System_Error ---
 
 	@(link_name = "XInputGetBatteryInformation")
-	XInputGetBatteryInformation :: proc(user: User, devType: Battery_Dev_Type, pBatteryInformation: ^XINPUT_BATTERY_INFORMATION) -> windows.System_Error ---
+	XInputGetBatteryInformation :: proc(user: XUSER, devType: BATTERY_DEVTYPE, pBatteryInformation: ^XINPUT_BATTERY_INFORMATION) -> windows.System_Error ---
 
 	@(link_name = "XInputGetKeystroke")
-	XInputGetKeystroke :: proc(user: User, dwReserved: windows.DWORD, pKeystroke: ^XINPUT_KEYSTROKE) -> windows.System_Error ---
+	XInputGetKeystroke :: proc(user: XUSER, dwReserved: windows.DWORD, pKeystroke: ^XINPUT_KEYSTROKE) -> windows.System_Error ---
 
 	@(link_name = "XInputGetDSoundAudioDeviceGuids")
-	XInputGetDSoundAudioDeviceGuids :: proc(user: User, pDSoundRenderGuid: ^windows.GUID, pDSoundCaptureGuid: ^windows.GUID) -> windows.System_Error ---
+	XInputGetDSoundAudioDeviceGuids :: proc(user: XUSER, pDSoundRenderGuid: ^windows.GUID, pDSoundCaptureGuid: ^windows.GUID) -> windows.System_Error ---
 
 }

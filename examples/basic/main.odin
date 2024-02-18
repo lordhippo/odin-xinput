@@ -8,7 +8,7 @@ import "core:fmt"
 // https://learn.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput
 
 main :: proc() {
-	for user in xinput.User {
+	for user in xinput.XUSER {
 		state: xinput.XINPUT_STATE
 		result := xinput.XInputGetState(user, &state)
 
