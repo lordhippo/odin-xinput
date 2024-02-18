@@ -4,6 +4,7 @@ foreign import "system:xinput.lib"
 
 import "core:c"
 
+// Error values that can be returned from the API
 Error :: enum c.ulong {
 	SUCCESS              = 0,
 	DEVICE_NOT_CONNECTED = 1167,
