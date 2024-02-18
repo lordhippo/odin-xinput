@@ -7,23 +7,23 @@ import "core:sys/windows"
 // Device types available in XINPUT_CAPABILITIES
 // Correspond to XINPUT_DEVTYPE_...
 Dev_Type :: enum windows.BYTE {
-	GAMEPAD = 1,
+	GAMEPAD = 0x01,
 }
 
 // Device subtypes available in XINPUT_CAPABILITIES
 // Correspond to XINPUT_DEVSUBTYPE_...
 Dev_Subtype :: enum windows.BYTE {
-	UNKNOWN          = 0,
-	GAMEPAD          = 1,
-	WHEEL            = 2,
-	ARCADE_STICK     = 3,
-	FLIGHT_STICK     = 4,
-	DANCE_PAD        = 5,
-	GUITAR           = 6,
-	GUITAR_ALTERNATE = 7,
-	DRUM_KIT         = 8,
-	GUITAR_BASS      = 11,
-	ARCADE_PAD       = 19,
+	UNKNOWN          = 0x00,
+	GAMEPAD          = 0x01,
+	WHEEL            = 0x02,
+	ARCADE_STICK     = 0x03,
+	FLIGHT_STICK     = 0x04,
+	DANCE_PAD        = 0x05,
+	GUITAR           = 0x06,
+	GUITAR_ALTERNATE = 0x07,
+	DRUM_KIT         = 0x08,
+	GUITAR_BASS      = 0x0B,
+	ARCADE_PAD       = 0x13,
 }
 
 // Flags for XINPUT_CAPABILITIES
@@ -58,9 +58,9 @@ Gamepad_Button :: enum {
 Gamepad_Buttons :: bit_set[Gamepad_Button;windows.WORD]
 
 // Gamepad thresholds
-XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE :: 7849
-XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE :: 8689
-XINPUT_GAMEPAD_TRIGGER_THRESHOLD :: 30
+XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE: windows.SHORT : 7849
+XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE: windows.SHORT : 8689
+XINPUT_GAMEPAD_TRIGGER_THRESHOLD: windows.SHORT : 30
 
 // Flags to pass to XInputGetCapabilities
 // Corresponds to log2(XINPUT_FLAG_...)
@@ -72,73 +72,78 @@ Flags :: bit_set[Flag;windows.DWORD]
 // Devices that support batteries
 // Corresponds to BATTERY_DEVTYPE_...
 Battery_Dev_Type :: enum windows.BYTE {
-	GAMEPAD = 0,
-	HEADSET = 1,
+	GAMEPAD = 0x00,
+	HEADSET = 0x01,
 }
 
 // Flags for battery status level
 // Correspond to BATTERY_TYPE_...
 Battery_Type :: enum windows.BYTE {
-	DISCONNECTED = 0,
-	WIRED        = 1,
-	ALKALINE     = 2,
-	NIMH         = 3,
-	UNKNOWN      = 255,
+	DISCONNECTED = 0x00, // This device is not connected
+	WIRED        = 0x01, // Wired device, no battery
+	ALKALINE     = 0x02, // Alkaline battery source
+	NIMH         = 0x03, // Nickel Metal Hydride battery source
+	UNKNOWN      = 0xFF, // Cannot determine the battery type
 }
 
 // These are only valid for wireless, connected devices, with known battery types
 // The amount of use time remaining depends on the type of device.
 // Correspond to BATTERY_LEVEL_...
 Battery_Level :: enum windows.BYTE {
-	EMPTY  = 0,
-	LOW    = 1,
-	MEDIUM = 2,
-	FULL   = 3,
+	EMPTY  = 0x00,
+	LOW    = 0x01,
+	MEDIUM = 0x02,
+	FULL   = 0x03,
 }
 
 // User index definitions
+
+// Index of the gamer associated with the device
 User :: enum windows.DWORD {
 	One   = 0,
 	Two   = 1,
 	Three = 2,
 	Four  = 3,
+	Any   = 0x000000FF, // Can be only used with XInputGetKeystroke
 }
+
+XUSER_MAX_COUNT :: 4
 
 // Codes returned for the gamepad keystroke
 // Corresponds to VK_PAD_...
 Virtual_Key :: enum windows.WORD {
-	A                = 22528,
-	B                = 22529,
-	X                = 22530,
-	Y                = 22531,
-	RSHOULDER        = 22532,
-	LSHOULDER        = 22533,
-	LTRIGGER         = 22534,
-	RTRIGGER         = 22535,
-	DPAD_UP          = 22544,
-	DPAD_DOWN        = 22545,
-	DPAD_LEFT        = 22546,
-	DPAD_RIGHT       = 22547,
-	START            = 22548,
-	BACK             = 22549,
-	LTHUMB_PRESS     = 22550,
-	RTHUMB_PRESS     = 22551,
-	LTHUMB_UP        = 22560,
-	LTHUMB_DOWN      = 22561,
-	LTHUMB_RIGHT     = 22562,
-	LTHUMB_LEFT      = 22563,
-	LTHUMB_UPLEFT    = 22564,
-	LTHUMB_UPRIGHT   = 22565,
-	LTHUMB_DOWNRIGHT = 22566,
-	LTHUMB_DOWNLEFT  = 22567,
-	RTHUMB_UP        = 22576,
-	RTHUMB_DOWN      = 22577,
-	RTHUMB_RIGHT     = 22578,
-	RTHUMB_LEFT      = 22579,
-	RTHUMB_UPLEFT    = 22580,
-	RTHUMB_UPRIGHT   = 22581,
-	RTHUMB_DOWNRIGHT = 22582,
-	RTHUMB_DOWNLEFT  = 22583,
+	A                = 0x5800,
+	B                = 0x5801,
+	X                = 0x5802,
+	Y                = 0x5803,
+	RSHOULDER        = 0x5804,
+	LSHOULDER        = 0x5805,
+	LTRIGGER         = 0x5806,
+	RTRIGGER         = 0x5807,
+	DPAD_UP          = 0x5810,
+	DPAD_DOWN        = 0x5811,
+	DPAD_LEFT        = 0x5812,
+	DPAD_RIGHT       = 0x5813,
+	START            = 0x5814,
+	BACK             = 0x5815,
+	LTHUMB_PRESS     = 0x5816,
+	RTHUMB_PRESS     = 0x5817,
+	LTHUMB_UP        = 0x5820,
+	LTHUMB_DOWN      = 0x5821,
+	LTHUMB_RIGHT     = 0x5822,
+	LTHUMB_LEFT      = 0x5823,
+	LTHUMB_UPLEFT    = 0x5824,
+	LTHUMB_UPRIGHT   = 0x5825,
+	LTHUMB_DOWNRIGHT = 0x5826,
+	LTHUMB_DOWNLEFT  = 0x5827,
+	RTHUMB_UP        = 0x5830,
+	RTHUMB_DOWN      = 0x5831,
+	RTHUMB_RIGHT     = 0x5832,
+	RTHUMB_LEFT      = 0x5833,
+	RTHUMB_UPLEFT    = 0x5834,
+	RTHUMB_UPRIGHT   = 0x5835,
+	RTHUMB_DOWNRIGHT = 0x5836,
+	RTHUMB_DOWNLEFT  = 0x5837,
 }
 
 // Flags used in XINPUT_KEYSTROKE
