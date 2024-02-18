@@ -109,7 +109,6 @@ User :: enum c.ulong {
 	Three = 2,
 	Four  = 3,
 }
-XUSER_MAX_COUNT :: len(User)
 
 // Codes returned for the gamepad keystroke
 // Corresponds to VK_PAD_...
