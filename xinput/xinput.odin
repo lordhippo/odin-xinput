@@ -4,13 +4,6 @@ foreign import "system:xinput.lib"
 
 import "core:sys/windows"
 
-// Error values that can be returned from the API
-Error :: enum windows.DWORD {
-	SUCCESS              = 0,
-	DEVICE_NOT_CONNECTED = 1167,
-	BAD_ARGUMENTS        = 160,
-}
-
 // Device types available in XINPUT_CAPABILITIES
 // Correspond to XINPUT_DEVTYPE_...
 Dev_Type :: enum windows.BYTE {
@@ -204,27 +197,27 @@ XINPUT_KEYSTROKE :: struct {
 foreign xinput {
 
 	@(link_name = "XInputGetState")
-	XInputGetState :: proc(user: User, pState: ^XINPUT_STATE) -> Error ---
+	XInputGetState :: proc(user: User, pState: ^XINPUT_STATE) -> windows.System_Error ---
 
 	@(link_name = "XInputSetState")
-	XInputSetState :: proc(user: User, pVibration: ^XINPUT_VIBRATION) -> Error ---
+	XInputSetState :: proc(user: User, pVibration: ^XINPUT_VIBRATION) -> windows.System_Error ---
 
 	@(link_name = "XInputGetCapabilities")
-	XInputGetCapabilities :: proc(user: User, dwFlags: Flags, pCapabilities: ^XINPUT_CAPABILITIES) -> Error ---
+	XInputGetCapabilities :: proc(user: User, dwFlags: Flags, pCapabilities: ^XINPUT_CAPABILITIES) -> windows.System_Error ---
 
 	@(link_name = "XInputEnable")
 	XInputEnable :: proc(enable: windows.BOOL) ---
 
 	@(link_name = "XInputGetAudioDeviceIds")
-	XInputGetAudioDeviceIds :: proc(user: User, pRenderDeviceId: windows.LPWSTR, pRenderCount: ^windows.UINT, pCaptureDeviceId: windows.LPWSTR, pCaptureCount: ^windows.UINT) -> Error ---
+	XInputGetAudioDeviceIds :: proc(user: User, pRenderDeviceId: windows.LPWSTR, pRenderCount: ^windows.UINT, pCaptureDeviceId: windows.LPWSTR, pCaptureCount: ^windows.UINT) -> windows.System_Error ---
 
 	@(link_name = "XInputGetBatteryInformation")
-	XInputGetBatteryInformation :: proc(user: User, devType: Battery_Dev_Type, pBatteryInformation: ^XINPUT_BATTERY_INFORMATION) -> Error ---
+	XInputGetBatteryInformation :: proc(user: User, devType: Battery_Dev_Type, pBatteryInformation: ^XINPUT_BATTERY_INFORMATION) -> windows.System_Error ---
 
 	@(link_name = "XInputGetKeystroke")
-	XInputGetKeystroke :: proc(user: User, dwReserved: windows.DWORD, pKeystroke: ^XINPUT_KEYSTROKE) -> Error ---
+	XInputGetKeystroke :: proc(user: User, dwReserved: windows.DWORD, pKeystroke: ^XINPUT_KEYSTROKE) -> windows.System_Error ---
 
 	@(link_name = "XInputGetDSoundAudioDeviceGuids")
-	XInputGetDSoundAudioDeviceGuids :: proc(user: User, pDSoundRenderGuid: ^windows.GUID, pDSoundCaptureGuid: ^windows.GUID) -> Error ---
+	XInputGetDSoundAudioDeviceGuids :: proc(user: User, pDSoundRenderGuid: ^windows.GUID, pDSoundCaptureGuid: ^windows.GUID) -> windows.System_Error ---
 
 }

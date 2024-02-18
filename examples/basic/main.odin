@@ -12,15 +12,19 @@ main :: proc() {
 		state: xinput.XINPUT_STATE
 		result := xinput.XInputGetState(user, &state)
 
-		switch result {
+		#partial switch result {
 		case .SUCCESS:
 			// Controller is connected
 			fmt.printf("Controller %v is connected\n", user)
 		case .DEVICE_NOT_CONNECTED:
 			// Controller is not connected
 			fmt.printf("Controller %v is not connected\n", user)
-		case .BAD_ARGUMENTS:
-			assert(false, "Bad arguments used for XInputGetState")
+		case:
+			fmt.eprintf(
+				"XInputGetState for controller %v returned %v\n",
+				user,
+				result,
+			)
 		}
 	}
 }
